@@ -1,0 +1,22 @@
+from .store import DataStorage
+from models.user import User
+
+
+def get_all_users():
+    print('Getting all Users')
+    storage = DataStorage('users')
+    return [User(**{"id": x.id, **x.to_dict()}) for x in storage.db().collection('users').where('active', '==', True).stream()]  # noqa
+
+
+class UserCRUD(DataStorage):
+    def __init__(self, doc_id) -> None:
+        super().__init__('users')
+        self.doc_id = doc_id
+
+    def set_user_doc(self, user: User) -> None:
+        self.doc_ref(doc_id=self.doc_id).set(user)
+
+    def update_tracking(self, trackings) -> None:
+        self.doc_ref(doc_id=self.doc_id).update({
+            "trackings": trackings
+        })

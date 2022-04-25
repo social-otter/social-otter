@@ -1,0 +1,27 @@
+name: Manual Triggered
+on:
+  workflow_dispatch:
+
+jobs:
+  track-and-notify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    
+    - name: Install dependencies
+      working-directory: social-otter/app
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Tracking Start
+      working-directory: social-otter/app
+      env:
+        FIREBASE_CREDS: ${{ secrets.FIREBASE_CREDS }}
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      run: python main.py

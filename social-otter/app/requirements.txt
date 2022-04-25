@@ -1,0 +1,6 @@
+requests
+snscrape
+firebase_admin
+pandas
+sentry-sdk
+pydantic
