@@ -37,3 +37,4 @@ class User(BaseModel):
     active: bool
     utm: UTM
     trackings: List[Tracking]
+    workflow_id: int

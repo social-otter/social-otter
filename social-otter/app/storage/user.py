@@ -2,10 +2,16 @@ from .store import DataStorage
 from models.user import User
 
 
-def get_all_users():
+def get_all_users(workflow_id: str):
     print('Getting all Users')
     storage = DataStorage('users')
-    return [User(**{"id": x.id, **x.to_dict()}) for x in storage.db().collection('users').where('active', '==', True).stream()]  # noqa
+    return [
+        User(**{"id": x.id, **x.to_dict()}) for x in storage.db()
+        .collection('users')
+        .where('active', '==', True)
+        .where('workflow_id', '==', workflow_id)
+        .stream()
+    ]
 
 
 class UserCRUD(DataStorage):

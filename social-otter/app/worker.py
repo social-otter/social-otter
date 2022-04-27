@@ -11,7 +11,7 @@ class Worker(threading.Thread):
         self.user = user
         print(f'Worker started for <{self.user.full_name}>')
 
-    def _process(self):
+    def __process(self):
         modified = False
         trackings = []
 
@@ -35,4 +35,4 @@ class Worker(threading.Thread):
             UserCRUD(doc_id=self.user.id).set_user_doc(self.user.dict())
 
     def run(self):
-        self._process()
+        self.__process()

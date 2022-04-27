@@ -4,3 +4,4 @@ firebase_admin
 pandas
 sentry-sdk
 pydantic
+python-dotenv
