@@ -1,7 +1,8 @@
 name: Tracking
-on:
-  schedule:
-    - cron: '0 */1 * * *'
+#on:
+#  working_dispatch:
+#  schedule:
+#    - cron: '0 */1 * * *'
 
 jobs:
   track-and-notify:
