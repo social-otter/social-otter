@@ -11,7 +11,7 @@ class WorkflowCRUD(DataStorage):
         return super().create_doc(self.doc_id, document.dict())
     
     def set(self, document: Workflow) -> None:
-        self.doc_ref(doc_id=self.doc_id).set(document)
+        self.doc_ref(doc_id=self.doc_id).set(document.dict())
 
     def get(self) -> Workflow:
         return Workflow(**super().doc_to_dict(doc_id=self.doc_id))

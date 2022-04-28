@@ -15,10 +15,12 @@ class Trigger(BaseModel):
 
 class Tracking(BaseModel):
     application: str
+    active: bool
     account: str
     last_seen_at: int
     webhooks: Optional[Webhook]
     trigger: Trigger
+    elapsed_ms: float = 0
 
 
 class UTM(BaseModel):

@@ -4,22 +4,17 @@ from firebase_admin import firestore
 
 from config import settings
 
-client_db = None
+cred = credentials.Certificate(settings.firbase_creds)
+firebase_admin.initialize_app(cred)
 
 
 class DataStorage:
     def __init__(self, collection_name) -> None:
         self.collection_name = collection_name
         self._doc_ref = None
-        self.db()
 
     def db(self):
-        global client_db
-        if not client_db:
-            cred = credentials.Certificate(settings.firbase_creds)
-            firebase_admin.initialize_app(cred)
-            client_db = firestore.client()
-        return client_db
+        return firestore.client()
 
     def create_doc(self, doc_id, document):
         _ref = self.db().collection(self.collection_name).document(doc_id)
