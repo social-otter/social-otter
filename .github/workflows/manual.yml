@@ -24,4 +24,5 @@ jobs:
       env:
         FIREBASE_CREDS: ${{ secrets.FIREBASE_CREDS }}
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        WORKFLOW_ID: 1
       run: python main.py
