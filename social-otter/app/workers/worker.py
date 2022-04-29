@@ -23,7 +23,7 @@ class Worker():
                 track.elapsed_ms = round(time()-start_time, 3)
                 track.last_seen_at = max([i.tweet_at for i in tweets], default=0)
                 track.last_seen_at_friendly = datetime.utcfromtimestamp(track.last_seen_at).strftime("%Y-%m-%d %H:%M:%S")
-                for tweet in tweets:
+                for tweet in sorted(tweets, key=lambda x: x.tweet_at):
                     if track.webhooks.app == 'slack':
                         slack(
                             webhook_url=track.webhooks.url,
