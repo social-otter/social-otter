@@ -27,7 +27,7 @@ class Twitter:
         
         return search_list
 
-    def grab_tweets(self) -> List[Tweet]:
+    def grab_new_tweets(self) -> List[Tweet]:
         print(f'{color.WARNING}Grabbing tweets...{color.END}')
         _seen, _tweets = [], []
         today = datetime.now().strftime('%Y-%m-%d')
@@ -39,7 +39,7 @@ class Twitter:
             print(f'{color.HEADER}SearchKey {search_str} {color.OKGREEN} Tweets: {len(data)} {color.WARNING} LastSeenAt: {self.tracking.last_seen_at} {color.END}')  # noqa
 
             for x in data:
-                tweet_at = int(datetime.timestamp(x.date))
+                tweet_at = datetime.timestamp(x.date)
 
                 if x.id not in _seen and tweet_at > self.tracking.last_seen_at:
                     print(f'{color.OKBLUE} Adding to list {x.url} TweetAt: {tweet_at} {color.END}')

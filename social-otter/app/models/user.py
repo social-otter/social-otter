@@ -18,6 +18,7 @@ class Tracking(BaseModel):
     active: bool
     account: str
     last_seen_at: int
+    last_seen_at_friendly: str
     webhooks: Optional[Webhook]
     trigger: Trigger
     elapsed_ms: float = 0

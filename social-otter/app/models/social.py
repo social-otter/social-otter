@@ -9,4 +9,4 @@ class Tweet(BaseModel):
     username: str
     displayname: str
     profileImageUrl: str
-    tweet_at: int
+    tweet_at: float
