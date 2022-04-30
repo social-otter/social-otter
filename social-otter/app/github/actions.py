@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class GithubWorkflow(BaseModel):
-    id: str
+    id: int
 
     @property
     def name(self) -> str:
@@ -19,10 +19,7 @@ def create_workflow(workflow: GithubWorkflow):
     with open(template_path, 'r') as f:
         yml = f.read()
 
-    yml = yml.format(**{
-        "WORKFLOW_NAME": workflow.name,
-        "WORKFLOW_ID": workflow.id
-    })
+    yml = yml.replace('{{WORKFLOW_NAME}}', workflow.name)
 
     root = Path(__file__).parent.parent.parent.parent
     workflow_dir = Path(root, '.github', 'workflows', workflow.file)
