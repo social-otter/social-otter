@@ -36,7 +36,7 @@ class Worker():
             UserCRUD(doc_id=self.user.id).set_user_doc(self.user.dict())
             print(f'Document changed {color.OKGREEN}<{self.user.full_name}>{color.END}')
         else:
-            print(f'{color.FAIL}There are no new tweets, yet.{color.END}')
+            print(f'{color.FAIL}There are no new tweets yet.{color.END}')
 
     def run(self):
         self.__process()
