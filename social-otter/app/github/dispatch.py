@@ -7,7 +7,7 @@ class GithubAPI:
     def __init__(self) -> None:
         self.base_url = f"https://api.github.com/repos/{settings.owner}/{settings.repo}"
         self.headers = {
-            'authorization': f'Bearer {settings.github_token}'
+            'authorization': f'Bearer {settings.workflow_token}'
         }
 
     def get_workflow_id(self) -> int:
