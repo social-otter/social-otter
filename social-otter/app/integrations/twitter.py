@@ -3,7 +3,7 @@ from datetime import datetime
 import snscrape.modules.twitter as tw
 
 from models.social import Tweet
-from models.user import Tracking
+from models.tracking import Tracking
 
 from utils.termcolors import color
 

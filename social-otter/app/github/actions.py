@@ -1,10 +1,6 @@
 from pathlib import Path
 from pydantic import BaseModel
 
-# Docs
-# https://docs.github.com/en/actions/security-guides/automatic-token-authentication
-# https://docs.github.com/en/rest/actions/workflows
-
 
 class GithubWorkflow(BaseModel):
     id: str
@@ -19,7 +15,7 @@ class GithubWorkflow(BaseModel):
 
 
 def create_workflow(workflow: GithubWorkflow):
-    template_path = Path(__file__).parent / 'template.yml'
+    template_path = Path(__file__).parent / 'workflows-template.yml'
     with open(template_path, 'r') as f:
         yml = f.read()
 
@@ -33,8 +29,3 @@ def create_workflow(workflow: GithubWorkflow):
 
     with open(workflow_dir, 'w') as f:
         f.write(str(yml))
-
-
-# create_workflow(
-#     GithubWorkflow(id="1")
-# )

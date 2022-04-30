@@ -25,5 +25,5 @@ jobs:
       env:
         FIREBASE_CREDS: ${ secrets.FIREBASE_CREDS }
         SENTRY_DSN: ${ secrets.SENTRY_DSN }
-        WORKFLOW_ID: 1
+        WORKFLOW_NAME: tracking-workflow-1
       run: python main.py

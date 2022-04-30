@@ -1,33 +1,32 @@
 import time
 import sentry_sdk
-import socket
 
 from config import settings
 from storage.user import get_all_users
 from workers.worker import Worker
-from storage.workflow import WorkflowCRUD
+from github.dispatch import GithubAPI
 
 sentry_sdk.init(
     settings.sentry_dsn,
     traces_sample_rate=1.0
 )
+MAX_RUN_TIME = 60 * 60 * 1
+START_TIME = time.time()
+
+
+def stop_worker():
+    return (time.time() - START_TIME) > MAX_RUN_TIME
 
 
 if __name__ == '__main__':
-    cycle = 60  # every minute
-    hostname = socket.gethostname()
-
     while True:
-        workflow = WorkflowCRUD(settings.workflow_id)
-        w = workflow.get()
-        w.hostname = hostname
-        w.start_time = time.time()
-        workflow.set(w)
-            
-        for user in get_all_users(workflow_id=settings.workflow_id):
+        if stop_worker():
+            GithubAPI().workflow_dispatch()
+            break
+
+        for user in get_all_users(workflow_name=settings.workflow_name):
             task = Worker(user=user)
             task.run()
 
-
-        print(f'Waiting for {cycle} seconds')
-        time.sleep(cycle)
+        print(f'Waiting for 60 seconds...')
+        time.sleep(60)

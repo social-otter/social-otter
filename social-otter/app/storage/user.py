@@ -3,14 +3,14 @@ from models.user import User
 from utils.termcolors import color
 
 
-def get_all_users(workflow_id: str):
+def get_all_users(workflow_name):
     print(f'{color.BOLD}Getting all Users{color.END}')
     storage = DataStorage('users')
     return [
         User(**{"id": x.id, **x.to_dict()}) for x in storage.db()
         .collection('users')
         .where('active', '==', True)
-        .where('workflow_id', '==', int(workflow_id))
+        .where('workflow_name', '==', workflow_name)
         .stream()
     ]
 
