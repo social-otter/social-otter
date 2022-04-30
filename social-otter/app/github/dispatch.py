@@ -33,4 +33,4 @@ class GithubAPI:
                 json={"ref": "main"}
             )
             print('Status:', response.status_code)
-            print('Response:', response.json())
+            print('Response:', response.text)
