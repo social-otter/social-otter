@@ -15,9 +15,6 @@ class GithubAPI:
             url=f"{self.base_url}/actions/workflows",
             headers=self.headers,
         )
-        print('Workflows:\n')
-        print('Status:', response.status_code)
-        print('Response:', response.text)
         if response.status_code == 200:
             data = response.json()
             for x in data['workflows']:
@@ -27,14 +24,10 @@ class GithubAPI:
 
     def workflow_dispatch(self):
         worflow_id = self.get_workflow_id()
-        print('Dispatches:\n')
-        print('worflow_id:', worflow_id)
 
         if worflow_id:
-            response = requests.post(
+            requests.post(
                 url=f"{self.base_url}/actions/workflows/{worflow_id}/dispatches",
                 headers=self.headers,
                 json={"ref": "main"}
             )
-            print('Status:', response.status_code)
-            print('Response:', response.text)

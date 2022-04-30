@@ -26,5 +26,6 @@ jobs:
         FIREBASE_CREDS: ${{ secrets.FIREBASE_CREDS }}
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
         WORKFLOW_NAME: {{WORKFLOW_NAME}}
       run: python main.py

@@ -20,13 +20,13 @@ def stop_worker():
 
 if __name__ == '__main__':
     while True:
-        if stop_worker():
-            GithubAPI().workflow_dispatch()
-            break
-
         for user in get_all_users(workflow_name=settings.workflow_name):
             task = Worker(user=user)
             task.run()
 
         print(f'Waiting for 60 seconds...')
         time.sleep(60)
+
+        if stop_worker():
+            GithubAPI().workflow_dispatch()
+            break
