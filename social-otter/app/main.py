@@ -10,7 +10,7 @@ sentry_sdk.init(
     settings.sentry_dsn,
     traces_sample_rate=1.0
 )
-MAX_RUN_TIME = 60 * 60 * 1
+MAX_RUN_TIME = 60 * 60 * 5
 START_TIME = time.time()
 
 
