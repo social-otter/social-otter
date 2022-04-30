@@ -26,4 +26,5 @@ jobs:
         FIREBASE_CREDS: ${ secrets.FIREBASE_CREDS }
         SENTRY_DSN: ${ secrets.SENTRY_DSN }
         WORKFLOW_NAME: tracking-workflow-1
+        GITHUB_TOKEN: ${ secrets.GITHUB_TOKEN }
       run: python main.py
