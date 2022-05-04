@@ -42,7 +42,7 @@ class Twitter:
                 tweet_at = datetime.timestamp(x.date)
 
                 if x.id not in _seen and tweet_at > self.tracking.last_seen_at:
-                    print(f'{color.OKBLUE} Adding to list {x.url} TweetAt: {tweet_at} {color.END}')
+                    print(f'{color.OKBLUE} --> Adding to list TweetAt: {tweet_at} {color.END}')
                     tweet = Tweet(
                         id=x.id,
                         content=x.content,
