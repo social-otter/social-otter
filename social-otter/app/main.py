@@ -22,7 +22,7 @@ if __name__ == '__main__':
     while True:
         for user in get_all_users(workflow_name=settings.workflow_name):
             task = Worker(user=user)
-            task.run()
+            task.start()
 
         print(f'Waiting for 60 seconds...')
         time.sleep(60)

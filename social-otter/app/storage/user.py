@@ -20,6 +20,9 @@ class UserCRUD(DataStorage):
         super().__init__('users')
         self.doc_id = doc_id
 
+    def create_doc(self, document):
+        return super().create_doc(self.doc_id, document)
+
     def set_user_doc(self, user: User) -> None:
         self.doc_ref(doc_id=self.doc_id).set(user)
 
@@ -27,3 +30,7 @@ class UserCRUD(DataStorage):
         self.doc_ref(doc_id=self.doc_id).update({
             "trackings": trackings
         })
+    
+    def get_doc(self) -> User:
+        obj = self.doc_to_dict(doc_id=self.doc_id)
+        return User(**obj) if obj else None

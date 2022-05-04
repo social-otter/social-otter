@@ -1,5 +1,5 @@
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta
 import snscrape.modules.twitter as tw
 
 from models.social import Tweet
@@ -30,7 +30,7 @@ class Twitter:
     def grab_new_tweets(self) -> List[Tweet]:
         print(f'{color.WARNING}Grabbing tweets...{color.END}')
         _seen, _tweets = [], []
-        today = datetime.now().strftime('%Y-%m-%d')
+        today = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
         for search in self.search_options():
             search_str = f'{search}{self.tracking.account} since:{today}'

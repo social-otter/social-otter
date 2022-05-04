@@ -1,3 +1,4 @@
+import threading
 from time import time
 from datetime import datetime
 from storage.user import UserCRUD
@@ -7,19 +8,21 @@ from channels.slack import slack
 from utils.termcolors import color
 
 
-class Worker():
+class Worker(threading.Thread):
     def __init__(self, user: User) -> None:
-        # threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.user = user
         print(f'Worker started for {color.WARNING}<{self.user.full_name}>{color.END}')
 
     def __process(self):
         trackings = []
+        total_tweets = 0
 
         for track in self.user.trackings:
             if track.active:
                 start_time = time()
                 tweets = Twitter(tracking=track).grab_new_tweets()
+                total_tweets += len(tweets)
                 track.elapsed_ms = round(time()-start_time, 3)
                 track.last_seen_at = max([i.tweet_at for i in tweets], default=0)
                 track.last_seen_at_friendly = datetime.utcfromtimestamp(track.last_seen_at).strftime("%Y-%m-%d %H:%M:%S")
@@ -32,7 +35,8 @@ class Worker():
             trackings.append(track)
 
         self.user.trackings = trackings
-        if len(tweets) > 0:
+
+        if total_tweets > 0:
             UserCRUD(doc_id=self.user.id).set_user_doc(self.user.dict())
             print(f'Document changed {color.OKGREEN}<{self.user.full_name}>{color.END}')
         else:
