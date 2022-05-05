@@ -1,9 +1,10 @@
+from typing import List
 from .store import DataStorage
 from models.user import User
 from utils.termcolors import color
 
 
-def get_all_users(workflow_name):
+def get_all_users(workflow_name) -> List[User]:
     storage = DataStorage('users')
     query_results = storage.db()\
         .collection('users')\
