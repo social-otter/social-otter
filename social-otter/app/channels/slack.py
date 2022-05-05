@@ -1,48 +1,51 @@
-import requests
+from typing import Any
 from models.social import Tweet
+from .template import BaseTemplate
 
 
-def slack(webhook_url, tweet: Tweet):
-    # https://app.slack.com/block-kit-builder/
+class Slack(BaseTemplate):
+    def __init__(self, model: Any) -> None:
+        super().__init__(model)
 
-    payload = {
-        "blocks": [
-            {
-                "type": "context",
-                "elements": [
-                    {
-                        "type": "image",
-                        "image_url": tweet.profileImageUrl,
-                        "alt_text": tweet.displayname
-                    },
-                    {
-                        "type": "mrkdwn",
-                        "text": f"*{tweet.displayname}* <{tweet.url}|@{tweet.username}>"
-                    },
-                    {
-                        "type": "mrkdwn",
-                        "text": tweet.date
+    def prep_tweet(self) -> dict:
+        tweet: Tweet = self.model
+        return {
+            "blocks": [
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "image",
+                            "image_url": tweet.profileImageUrl,
+                            "alt_text": tweet.displayname
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*{tweet.displayname}* <{tweet.url}|@{tweet.username}>"
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": tweet.date
+                        }
+                    ]
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "plain_text",
+                        "emoji": True,
+                        "text": tweet.content
                     }
-                ]
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "plain_text",
-                    "emoji": True,
-                    "text": tweet.content
-                }
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": tweet.url
-                }
-            },
-            {
-                "type": "divider"
-            },
-        ]
-    }    
-    return requests.post(url=webhook_url, json=payload)
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": tweet.url
+                    }
+                },
+                {
+                    "type": "divider"
+                },
+            ]
+        }

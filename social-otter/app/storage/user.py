@@ -4,15 +4,20 @@ from utils.termcolors import color
 
 
 def get_all_users(workflow_name):
-    print(f'{color.BOLD}Getting all Users{color.END}')
     storage = DataStorage('users')
-    return [
-        User(**{"id": x.id, **x.to_dict()}) for x in storage.db()
-        .collection('users')
-        .where('active', '==', True)
-        .where('workflow_name', '==', workflow_name)
+    query_results = storage.db()\
+        .collection('users')\
+        .where('active', '==', True)\
+        .where('workflow_name', '==', workflow_name)\
         .stream()
-    ]
+    data = []
+    for x in query_results:
+        try:
+            data.append(User(**{"id": x.id, **x.to_dict()}))
+        except:
+            print(f'{color.FAIL}Failed conversion, document_id {x.id}{color.END}')
+
+    return data
 
 
 class UserCRUD(DataStorage):
@@ -24,7 +29,7 @@ class UserCRUD(DataStorage):
         return super().create_doc(self.doc_id, document)
 
     def set_user_doc(self, user: User) -> None:
-        self.doc_ref(doc_id=self.doc_id).set(user)
+        self.doc_ref(doc_id=self.doc_id).set(user.dict())
 
     def update_tracking(self, trackings) -> None:
         self.doc_ref(doc_id=self.doc_id).update({
