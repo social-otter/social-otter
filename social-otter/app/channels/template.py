@@ -1,9 +1,9 @@
-from typing import Any
+from pydantic import BaseModel
 from models.social import Tweet
 
 
 class BaseTemplate:
-    def __init__(self, model: Any) -> None:
+    def __init__(self, model: BaseModel) -> None:
         self.model = model
 
     def prep_tweet(self) -> dict:

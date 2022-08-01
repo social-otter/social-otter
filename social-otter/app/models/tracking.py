@@ -1,8 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel
 
-from .webhook import Webhook
-from .trigger import Trigger
+from models.webhook import Webhook
+from models.trigger import Trigger
 
 
 class Tracking(BaseModel):

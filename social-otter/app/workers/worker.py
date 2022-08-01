@@ -37,8 +37,10 @@ class Worker(threading.Thread):
         if track.active:
             if track.application == 'twitter':
                 return self.twitter(track=track)
+
             if track.application == 'facebook':
                 ...
+
             if track.application == 'instagram':
                 ...
         else:

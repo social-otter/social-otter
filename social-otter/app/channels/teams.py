@@ -1,10 +1,10 @@
-from typing import Any
+from pydantic import BaseModel
 from models.social import Tweet
-from .template import BaseTemplate
+from channels.template import BaseTemplate
 
 
 class Teams(BaseTemplate):
-    def __init__(self, model: Any) -> None:
+    def __init__(self, model: BaseModel) -> None:
         super().__init__(model)
 
     def prep_tweet(self) -> dict:

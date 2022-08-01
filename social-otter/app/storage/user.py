@@ -1,5 +1,5 @@
 from typing import List
-from .store import DataStorage
+from storage.store import DataStorage
 from models.user import User
 from utils.termcolors import color
 

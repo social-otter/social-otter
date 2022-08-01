@@ -1,4 +1,4 @@
-from .store import DataStorage
+from storage.store import DataStorage
 from models.workflow import Workflow
 
 

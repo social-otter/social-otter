@@ -1,12 +1,13 @@
 from typing import Any
+from pydantic import BaseModel
 import requests
 from models.webhook import Webhook
-from .slack import Slack
-from .teams import Teams
+from channels.slack import Slack
+from channels.teams import Teams
 
 
 class Notify:
-    def __init__(self, webhook: Webhook, model: Any) -> None:
+    def __init__(self, webhook: Webhook, model: BaseModel) -> None:
         self.webhook = webhook
         self.model = model
 
@@ -17,5 +18,8 @@ class Notify:
         if self.webhook.app == 'teams':
             return Teams(model=self.model).build_template()
 
+        if self.webhook.app == 'webhook':
+            return self.model.dict()
+
     def send(self) -> None:
-        requests.post(url=self.webhook.url, json=self.template())
+        return requests.post(url=self.webhook.url, json=self.template())

@@ -29,7 +29,8 @@ class Twitter:
 
     def grab_new_tweets(self) -> List[Tweet]:
         since = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-        _seen, _tweets = [], []
+        _seen = []
+        _tweets = []
 
         for search in self.search_options():
             search_str = f'{search}{self.tracking.account} since:{since}'

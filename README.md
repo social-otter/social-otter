@@ -16,11 +16,11 @@ Social Otter is an open-sourced project which allows getting notifications when 
 
 # Easy to use
 
-There is no need to use your infrastructure. **Github Actions** is free for all public repository, think to use it.
+There is no need to use infrastructure. We use the **Github Actions**.
 
 **Alternatives:**
   1. You may use the `Github Actions` follow the instruction. (In progress)
   2. Create a tracking on [sotter.co](https://sotter.co) app. (In progress)
 
 # About
-Every business wants to know talk about its business. Social media is an excellent power for customers, users, and the community.
+Every business wants to know what people talk about their business. Social media is an excellent power for customers, users, and the community.
