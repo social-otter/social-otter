@@ -8,15 +8,14 @@ def get_all_users(workflow_name) -> List[User]:
     storage = DataStorage('users')
     query_results = storage.db()\
         .collection('users')\
-        .where('active', '==', True)\
         .where('workflow_name', '==', workflow_name)\
         .stream()
     data = []
     for x in query_results:
-        try:
-            data.append(User(**{"id": x.id, **x.to_dict()}))
-        except:
-            print(f'{color.FAIL}Failed conversion, document_id {x.id}{color.END}')
+        data.append(User(**{"id": x.id, **x.to_dict()}))
+        # try:
+        # except:
+        #     print(f'{color.FAIL}Failed conversion, document_id {x.id}{color.END}')
 
     return data
 

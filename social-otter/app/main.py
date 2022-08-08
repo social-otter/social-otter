@@ -4,7 +4,7 @@ from typing import List
 import sentry_sdk
 
 from config import settings
-from storage.user import get_all_users, UserCRUD
+from storage.user import get_all_users
 from workers.worker import Worker
 from github.dispatch import GithubAPI
 
