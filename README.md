@@ -2,25 +2,28 @@
 
 Social Otter is an open-sourced project which allows getting notifications when a new post is sent about your keyword, hashtag, or user on social media platforms.
 
-|Source|Integration|State|
-|------|-----------|-----|
-|Twitter|Web Scraping|`Ready`|
-|Facebook Pages|Web Scraping|`Not Ready`|
-|Instagram|Business API|`Not Ready`|
+## Social Media Platforms
 
-**Getting Notifications Via:**
-* Slack
-* Microsoft Teams
-* Discord
+Every business wants to know what people talk about their business. Social media is an excellent power for customers, users, and the community, but it is hard to track social media continuously. Social Otter notify you when a new post is sent <ins>no need for API integration</ins> .
+
+|Platform|Status|
+|--------|------|
+|Twitter|Usable|
+|Facebook Pages|In Planning|
+|Instagram|In Planning|
+
+## Getting Notifications Via
+
+<img src="/social-otter/static/logo/slack.svg" width="50" alt="Slack" /><img src="/social-otter/static/logo/teams.svg" width="50" alt="Microsoft Teams" /><img src="/social-otter/static/logo/discord.svg" width="50" alt="Discord" /><img src="/social-otter/static/logo/webhook.png" width="50" alt="Webhook" />
+
+* [Slack](https://slack.com/)
+* [Microsoft Teams](https://www.microsoft.com/en/microsoft-teams/group-chat-software)
+* [Discord](https://discord.com/)
 * Custom Webhook
 
-# Easy to use
-
-There is no need to use infrastructure. We use the **Github Actions**.
-
-**Alternatives:**
-  1. You may use the `Github Actions` follow the instruction. (In progress)
-  2. Create a tracking on [sotter.co](https://sotter.co) app. (In progress)
-
-# About
-Every business wants to know what people talk about their business. Social media is an excellent power for customers, users, and the community.
+|Platform|Status|
+|--------|------|
+|Slack|Usable|
+|Microsoft Teams|Usable|
+|Discord|In Planning|
+|Custom Webhook|Usable|
