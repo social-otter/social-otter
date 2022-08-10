@@ -15,6 +15,8 @@ class Tracking(BaseModel):
     webhooks: Optional[Webhook]
     trigger: Trigger
     elapsed_ms: Optional[float]
+    count: Optional[int]
+    last_execution_at: Optional[str]
 
     class Config:
         validate_assignment = True

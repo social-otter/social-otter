@@ -1,5 +1,6 @@
 import threading
 from time import time
+from datetime import datetime, timezone
 from storage.user import UserCRUD
 from integrations.twitter import Twitter
 from models.user import User
@@ -22,7 +23,11 @@ class Worker(threading.Thread):
 
     def twitter(self, track: Tracking) -> Tracking:
         start_time = time()
-        tweets = Twitter(tracking=track).grab_new_tweets()
+        tweet_counts, tweets = Twitter(tracking=track).grab_new_tweets()
+        utc = datetime.now(timezone.utc).astimezone().tzname()
+        track.last_execution_at = datetime.now().strftime(f"%H:%M:%S ({utc}:00)")
+        track.count = tweet_counts
+
         if len(tweets) > 0:
             self.modified = True
             track.elapsed_ms = round(time()-start_time, 3)

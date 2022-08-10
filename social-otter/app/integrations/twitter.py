@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 from datetime import datetime, timedelta
 import snscrape.modules.twitter as tw
 
@@ -27,15 +27,18 @@ class Twitter:
         
         return search_list
 
-    def grab_new_tweets(self) -> List[Tweet]:
+    def grab_new_tweets(self) -> Tuple[int, List[Tweet]]:
         since = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
         _seen = []
         _tweets = []
+        tweet_counts = 0
 
         for search in self.search_options():
-            search_str = f'{search}{self.tracking.account} since:{since}'
+            keyword = self.tracking.account.replace('@', '').replace('#', '')
+            search_str = f'{search}{keyword} since:{since}'
             results = tw.TwitterSearchScraper(search_str).get_items()
             data = list(results)
+            tweet_counts += len(data)
 
             for x in data:
                 tweet_at = datetime.timestamp(x.date)
@@ -59,6 +62,6 @@ class Twitter:
         # send the last one tweet if never sent
         if self.tracking.last_seen_at == 0 and len(_tweets) > 1:
             last_one = sorted(_tweets, key=lambda x: x.tweet_at)[-1]
-            return [last_one]
+            return tweet_counts, [last_one]
 
-        return _tweets
+        return tweet_counts, _tweets
