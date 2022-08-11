@@ -21,7 +21,7 @@ class Discord(BaseTemplate):
                         "url": tweet.url,
                         "icon_url": tweet.profileImageUrl
                     },
-                    "title": tweet.url,
+                    "title": 'Go to tweet',
                     "url": tweet.url,
                     "description": tweet.content,
                     "footer": {

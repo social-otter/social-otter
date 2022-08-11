@@ -4,19 +4,22 @@ from models.user import User
 from utils.termcolors import color
 
 
-def get_all_users(workflow_name) -> List[User]:
+def get_all_users(workflow_name, id=None) -> List[User]:
     storage = DataStorage('users')
-    query_results = storage.db()\
-        .collection('users')\
-        .where('workflow_name', '==', workflow_name)\
-        .stream()
+    if id:
+        query_results = storage.db()\
+            .collection('users')\
+            .where('id', '==', id)\
+            .stream()
+    else:
+        query_results = storage.db()\
+            .collection('users')\
+            .where('workflow_name', '==', workflow_name)\
+            .stream()
+
     data = []
     for x in query_results:
         data.append(User(**{"id": x.id, **x.to_dict()}))
-        # try:
-        # except:
-        #     print(f'{color.FAIL}Failed conversion, document_id {x.id}{color.END}')
-
     return data
 
 

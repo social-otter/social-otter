@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, validator
 
 from models.webhook import Webhook
 from models.trigger import Trigger
 from models.twitter_user import TwitterUser
+from models.tracking_failure_log import TrackingFailureLog
 
 
 class Tracking(BaseModel):
@@ -19,6 +20,7 @@ class Tracking(BaseModel):
     count: Optional[int]
     last_execution_at: Optional[str]
     found_user: Optional[TwitterUser]
+    failure_log: Optional[List[TrackingFailureLog]]
 
     class Config:
         validate_assignment = True

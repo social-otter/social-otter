@@ -5,6 +5,7 @@ import snscrape.modules.twitter as tw
 from models.social import Tweet
 from models.tracking import Tracking
 from models.twitter_user import TwitterUser
+from models.tracking_failure_log import TrackingFailureLog
 
 # from utils.termcolors import color
 # from utils.dateops import friendly_datetime
@@ -32,17 +33,19 @@ class Twitter:
         since = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
         _seen = []
         _tweets = []
-        tweet_counts = 0
+        daily_tweets = []
 
         for search in self.search_options():
             keyword = self.tracking.account.replace('@', '').replace('#', '')
             search_str = f'{search}{keyword} since:{since}'
             results = tw.TwitterSearchScraper(search_str).get_items()
             data = list(results)
-            tweet_counts += len(data)
 
             for x in data:
                 tweet_at = datetime.timestamp(x.date)
+
+                if x.id not in daily_tweets:
+                    daily_tweets.append(x.id)
 
                 if x.id not in _seen and tweet_at > self.tracking.last_seen_at:
                     tweet = Tweet(
@@ -63,9 +66,9 @@ class Twitter:
         # send the last one tweet if never sent
         if self.tracking.last_seen_at == 0 and len(_tweets) > 1:
             last_one = sorted(_tweets, key=lambda x: x.tweet_at)[-1]
-            return tweet_counts, [last_one]
+            return len(daily_tweets), [last_one]
 
-        return tweet_counts, _tweets
+        return len(daily_tweets), _tweets
 
     def get_user(self) -> dict:
         try:
@@ -74,5 +77,13 @@ class Twitter:
 
             if isinstance(results, tw.User):
                 return TwitterUser(**results.__dict__).dict()
-        except:
-            ...
+
+            raise ValueError('No user found!')
+        except Exception as e:
+            self.tracking.failure_log.append(
+                TrackingFailureLog(
+                    level='critical',
+                    description=f'[{self.tracking.account}] user not found!',
+                    exception=str(e)
+                )
+            )

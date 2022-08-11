@@ -1,6 +1,7 @@
 from typing import Any
 from pydantic import BaseModel
 import requests
+from requests import Response
 from channels.slack import Slack
 from channels.teams import Teams
 from channels.discord import Discord
@@ -25,5 +26,5 @@ class Notify:
         if self.webhook.app == 'webhook':
             return self.model.dict()
 
-    def send(self) -> None:
+    def send(self) -> Response:
         return requests.post(url=self.webhook.url, json=self.template())
