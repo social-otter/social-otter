@@ -23,10 +23,12 @@ class Worker(threading.Thread):
 
     def twitter(self, track: Tracking) -> Tracking:
         start_time = time()
-        tweet_counts, tweets = Twitter(tracking=track).grab_new_tweets()
+        tw = Twitter(tracking=track)
+        tweet_counts, tweets = tw.grab_new_tweets()
         utc = datetime.now(timezone.utc).astimezone().tzname()
         track.last_execution_at = datetime.now().strftime(f"%H:%M:%S ({utc}:00)")
         track.count = tweet_counts
+        track.found_user = tw.get_user()
 
         if len(tweets) > 0:
             self.modified = True
@@ -59,6 +61,7 @@ class Worker(threading.Thread):
 
         self.user.trackings = trackings
 
+        # prevent redundant update
         if self.modified:
             UserCRUD(doc_id=self.user.id).set_user_doc(self.user)
             print(f'{color.OKGREEN}Document changed <{self.user.id}>{color.END}')

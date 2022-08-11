@@ -3,6 +3,7 @@ from pydantic import BaseModel, validator
 
 from models.webhook import Webhook
 from models.trigger import Trigger
+from models.twitter_user import TwitterUser
 
 
 class Tracking(BaseModel):
@@ -17,6 +18,7 @@ class Tracking(BaseModel):
     elapsed_ms: Optional[float]
     count: Optional[int]
     last_execution_at: Optional[str]
+    found_user: Optional[TwitterUser]
 
     class Config:
         validate_assignment = True

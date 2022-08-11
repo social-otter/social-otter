@@ -4,6 +4,7 @@ import snscrape.modules.twitter as tw
 
 from models.social import Tweet
 from models.tracking import Tracking
+from models.twitter_user import TwitterUser
 
 # from utils.termcolors import color
 # from utils.dateops import friendly_datetime
@@ -65,3 +66,13 @@ class Twitter:
             return tweet_counts, [last_one]
 
         return tweet_counts, _tweets
+
+    def get_user(self) -> dict:
+        try:
+            keyword = self.tracking.account.replace('@', '').replace('#', '')
+            results = tw.TwitterUserScraper(keyword)._get_entity()
+
+            if isinstance(results, tw.User):
+                return TwitterUser(**results.__dict__).dict()
+        except:
+            ...
