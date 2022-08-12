@@ -10,7 +10,7 @@ from models.tracking_failure_log import TrackingFailureLog
 class Tracking(BaseModel):
     id: str
     application: str
-    active: bool
+    active: Optional[bool]
     account: str
     last_seen_at: Optional[int]
     last_seen_at_friendly: Optional[str]
@@ -28,3 +28,7 @@ class Tracking(BaseModel):
     @validator('last_seen_at')
     def set_last_seen_at(cls, v):
         return v or 0
+
+    @validator('active')
+    def set_active(cls, v):
+        return v or True
