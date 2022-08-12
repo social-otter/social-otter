@@ -10,9 +10,9 @@ from models.tracking_failure_log import TrackingFailureLog
 class Tracking(BaseModel):
     id: str
     application: str
-    active: Optional[bool]
+    active: Optional[bool] = True
     account: str
-    last_seen_at: Optional[int]
+    last_seen_at: Optional[int] = 0
     last_seen_at_friendly: Optional[str]
     webhooks: Optional[Webhook]
     trigger: Trigger
