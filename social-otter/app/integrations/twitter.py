@@ -1,3 +1,4 @@
+from time import time
 from typing import List, Tuple
 from datetime import datetime, timedelta
 import snscrape.modules.twitter as tw

@@ -1,7 +1,6 @@
 from typing import List
 from storage.store import DataStorage
 from models.user import User
-from utils.termcolors import color
 
 
 def get_all_users(workflow_name, id=None) -> List[User]:

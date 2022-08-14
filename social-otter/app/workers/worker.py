@@ -8,6 +8,7 @@ from models.user import User
 from models.tracking import Tracking
 from models.webhook import Webhook
 from models.tracking_failure_log import TrackingFailureLog
+from models.tracking_stats import TrackingStats
 from channels.notify import Notify
 from utils.termcolors import color
 from utils.dateops import friendly_datetime
@@ -31,6 +32,8 @@ class Worker(threading.Thread):
         track.last_execution_at = datetime.now().strftime(f"%H:%M:%S ({utc}:00)")
         track.count = tweet_counts
         track.found_user = tw.get_user()
+
+        TrackingStats(tracking_id=track.id, timestamp=int(time()), tweets=tweet_counts)
 
         if len(tweets) > 0:
             self.modified = True
@@ -58,25 +61,28 @@ class Worker(threading.Thread):
         return track
 
     def build_tracker(self, track: Tracking) -> Tracking:
-        if track.active:
-            if track.application == 'twitter':
-                return self.twitter(track=track)
+        if track.application == 'twitter':
+            return self.twitter(track=track)
 
-            if track.application == 'facebook':
-                ...
+        if track.application == 'facebook':
+            ...
 
-            if track.application == 'instagram':
-                ...
-        else:
-            print(f'{color.FAIL}Tracking is not active!{color.END}')
-            return track
+        if track.application == 'instagram':
+            ...
 
     def process(self):
         trackings: List[Tracking] = []
-        for track in self.user.trackings:
-            track.failure_log = []  # initial value
-            _track = self.build_tracker(track=track)
-            trackings.append(_track)
+        if len(self.user.trackings) > 0:
+            for track in self.user.trackings:
+                track.failure_log = []  # initial value
+                if track.active:
+                    track_worker = self.build_tracker(track=track)
+                    trackings.append(track_worker)
+                else:
+                    print(f'{color.FAIL}Tracking is not active!{color.END}')
+                    return track
+        else:
+            print(f'{color.FAIL}No found tracking!{color.END}')
 
         self.user.trackings = trackings
 
