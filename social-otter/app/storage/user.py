@@ -1,7 +1,6 @@
 from typing import List
 from storage.store import DataStorage
 from models.user import User
-from utils.termcolors import color
 
 
 def get_all_users(workflow_name, id=None) -> List[User]:
@@ -17,10 +16,11 @@ def get_all_users(workflow_name, id=None) -> List[User]:
             .where('workflow_name', '==', workflow_name)\
             .stream()
 
-    data = []
+    data: List[User] = []
     for x in query_results:
         data.append(User(**{"id": x.id, **x.to_dict()}))
-    return data
+
+    return [x for x in data if len(x.trackings) > 0]
 
 
 class UserCRUD(DataStorage):
