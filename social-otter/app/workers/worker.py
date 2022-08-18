@@ -25,8 +25,8 @@ class Worker(threading.Thread):
     def twitter(self, track: Tracking) -> Tracking:
         t0 = time()
         tw = Twitter(tracking=track)
-        elapsed_sec = int(time()-t0)
         tweets = tw.grab_new_tweets()
+        elapsed_sec = int(time()-t0)
         last_tweet_id = None
 
         if len(tweets) > 0:
@@ -36,12 +36,17 @@ class Worker(threading.Thread):
             last_tweet_id=last_tweet_id or 0,
             last_track_at=time()
         )
+        history_cache = []
         history = TrackingHistory(
             timestamp=time(),
             elapsed_sec=elapsed_sec,
             count=len(tweets)
         )
-        track.history = track.history.append(history) if track.history else [history]
+        if track.history:
+            history_cache = track.history
+
+        history_cache.append(history)
+        track.history = history_cache
         track.found_user = tw.get_user()
 
         # Notify to channels
