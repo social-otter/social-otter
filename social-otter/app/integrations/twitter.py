@@ -7,9 +7,6 @@ from models.tracking import Tracking
 from models.twitter_user import TwitterUser
 from models.tracking_failure_log import TrackingFailureLog
 
-# from utils.termcolors import color
-# from utils.dateops import friendly_datetime
-
 
 class Twitter:
     def __init__(self, tracking: Tracking) -> None:
@@ -29,25 +26,27 @@ class Twitter:
         
         return search_list
 
-    def grab_new_tweets(self) -> Tuple[int, List[Tweet]]:
-        since = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-        _seen = []
-        _tweets = []
-        daily_tweets = []
+    def grab_new_tweets(self) -> List[Tweet]:
+        seen_tweets = []
+        new_tweets = []
+        self.tracking.keyword = self.tracking.keyword.replace('@', '').replace('#', '')
 
         for search in self.search_options():
-            keyword = self.tracking.account.replace('@', '').replace('#', '')
-            search_str = f'{search}{keyword} since:{since}'
+            search_str = None
+
+            if self.tracking.misc and self.tracking.misc.last_tweet_id > 0:
+                search_str = f'{search}{self.tracking.keyword} since_id:{self.tracking.misc.last_tweet_id}'
+            else:
+                # get tweets only during the day if it works first time
+                search_str = f'{search}{self.tracking.keyword} within_time:1h'
+
             results = tw.TwitterSearchScraper(search_str).get_items()
             data = list(results)
 
             for x in data:
-                tweet_at = datetime.timestamp(x.date)
+                x: tw.Tweet = x
 
-                if x.id not in daily_tweets:
-                    daily_tweets.append(x.id)
-
-                if x.id not in _seen and tweet_at > self.tracking.last_seen_at:
+                if x.id not in seen_tweets:
                     tweet = Tweet(
                         id=x.id,
                         content=x.content,
@@ -56,23 +55,22 @@ class Twitter:
                         username=x.user.username,
                         displayname=x.user.displayname,
                         profileImageUrl=x.user.profileImageUrl,
-                        tweet_at=tweet_at
                     )
-                    _tweets.append(tweet)
-                    _seen.append(tweet.id)
+                    new_tweets.append(tweet)
+                    seen_tweets.append(tweet.id)
             
-            # print(f'Tracking tweets as {color.OKCYAN}{self.tracking.account}{color.END} SearchKey {color.HEADER}{search_str} {color.OKGREEN} New Tweets: {len(_tweets)} {color.WARNING} LatestSeenAt: {friendly_datetime(self.tracking.last_seen_at)}{color.END}')  # noqa
+            # print(f'Tracking tweets as {color.OKCYAN}{self.tracking.keyword}{color.END} SearchKey {color.HEADER}{search_str} {color.OKGREEN} New Tweets: {len(_tweets)} {color.WARNING} LatestSeenAt: {friendly_datetime(self.tracking.last_seen_at)}{color.END}')  # noqa
 
         # send the last one tweet if never sent
-        if self.tracking.last_seen_at == 0 and len(_tweets) > 1:
-            last_one = sorted(_tweets, key=lambda x: x.tweet_at)[-1]
-            return len(daily_tweets), [last_one]
+        if not self.tracking.misc and len(new_tweets) > 0:
+            last_one = sorted(new_tweets, key=lambda x: x.id)[-1]
+            return [last_one]
 
-        return len(daily_tweets), _tweets
+        return new_tweets
 
     def get_user(self) -> dict:
         try:
-            keyword = self.tracking.account.replace('@', '').replace('#', '')
+            keyword = self.tracking.keyword.replace('@', '').replace('#', '')
             results = tw.TwitterUserScraper(keyword)._get_entity()
 
             if isinstance(results, tw.User):
@@ -83,7 +81,7 @@ class Twitter:
             self.tracking.failure_log.append(
                 TrackingFailureLog(
                     level='critical',
-                    description=f'[{self.tracking.account}] user not found!',
+                    description=f'[{self.tracking.keyword}] user not found!',
                     exception=str(e)
                 )
             )
