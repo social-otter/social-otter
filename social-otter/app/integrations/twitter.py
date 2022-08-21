@@ -23,13 +23,13 @@ class Twitter:
 
         if self.tracking.trigger.post_from_this:
             search_list.append(('from:', 'new_post'))
-        
+
         if self.tracking.trigger.post_to_this_by_hashtag:
             search_list.append(('#', 'hashtag'))
 
         if self.tracking.trigger.post_to_this_by_mention:
             search_list.append(('@', 'mention'))
-        
+
         return search_list
 
     def grab_new_tweets(self) -> Tuple[TrackingStats, List[Tweet]]:
@@ -49,7 +49,7 @@ class Twitter:
             search_str = None
 
             if last_tweet_id > 0:
-                search_str = f'{search}{self.keyword} since_id:{self.tracking.history.misc.last_tweet_id}'
+                search_str = f'{search}{self.keyword} since_id:{self.tracking.history.misc.last_tweet_id}'  # noqa
             else:
                 # get tweets only during the day if it works first time
                 search_str = f'{search}{self.keyword} within_time:1h'

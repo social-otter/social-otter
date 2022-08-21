@@ -9,7 +9,7 @@ class WorkflowCRUD(DataStorage):
 
     def create(self, document: Workflow):
         return super().create_doc(self.doc_id, document.dict())
-    
+
     def set(self, document: Workflow) -> None:
         self.doc_ref(doc_id=self.doc_id).set(document.dict())
 

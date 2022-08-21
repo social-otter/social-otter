@@ -5,3 +5,4 @@ pandas
 sentry-sdk
 pydantic
 python-dotenv
+flake8

@@ -9,13 +9,13 @@ class Discord(BaseTemplate):
 
     def prep_tweet(self) -> dict:
         tweet: Tweet = self.model
-        avatar_url = "https://raw.githubusercontent.com/social-otter/social-otter/main/social-otter/static/images/otter.png"
+        avatar_url = "https://raw.githubusercontent.com/social-otter/social-otter/main/social-otter/static/images/otter.png"  # noqa
         return {
             "username": "Social Otter",
             "avatar_url": avatar_url,
             "embeds": [
                 {
-                    "color": 1942002,  # twitter's color
+                    "color": 1942002,  # twitter's color
                     "author": {
                         "name": f'{tweet.displayname} @{tweet.username}',
                         "url": tweet.url,

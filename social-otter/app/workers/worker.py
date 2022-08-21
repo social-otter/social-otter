@@ -1,6 +1,6 @@
-from pprint import pprint
 import threading
 from time import time
+from typing import Tuple
 from storage.user import UserCRUD
 from integrations.twitter import Twitter
 from models.user import User
@@ -10,6 +10,7 @@ from models.tracking_update import TrackingUpdate, TrackingUpdateHistory
 from models.tracking_history import TrackingHistory
 from models.tracking_twitter_misc import TrackingTwitterMisc
 from models.tracking_failure_log import TrackingFailureLog
+from models.tracking_stats import TrackingStats
 from channels.notify import Notify
 from utils.termcolors import color
 
@@ -24,7 +25,7 @@ class Worker(threading.Thread):
     def send_notify(self, webhook: Webhook, model):
         return Notify(webhook=webhook, model=model).send()
 
-    def twitter(self, track: Tracking) -> TrackingUpdateHistory:
+    def twitter(self, track: Tracking) -> Tuple[TrackingStats, TrackingUpdateHistory]:
         tw = Twitter(tracking=track)
         stats, tweets = tw.grab_new_tweets()
         last_tweet_id = sorted(tweets, key=lambda x: x.id)[-1].id if len(tweets) > 0 else 0
@@ -33,17 +34,15 @@ class Worker(threading.Thread):
         if track.history:
             if track.history.stats:
                 all_stats = track.history.stats
-        
+
         all_stats.append(stats)
 
         # Notify to channels
         for tweet in sorted(tweets, key=lambda x: x.id):
             try:
                 response = self.send_notify(webhook=track.webhooks, model=tweet)
-                
+
                 if not 200 <= response.status_code <= 299:
-                    print(color.FAIL, response.status_code, color.END)
-                    print(color.FAIL, response.text, color.END)
                     raise ValueError('Notification was not sent!')
             except Exception as e:
                 self.errors.append(
@@ -53,10 +52,10 @@ class Worker(threading.Thread):
                         exception=str(e)
                     )
                 )
-                # No more add to log
-                # Stopping the process
+                # No more add to log
+                # Stopping the process
                 break
-        
+
         history = TrackingHistory(
             misc=TrackingTwitterMisc(
                 last_track_at=time(),
@@ -66,10 +65,13 @@ class Worker(threading.Thread):
             errors=self.errors
         )
         found_user = tw.get_user()
+        update_history = TrackingUpdateHistory(
+            found_user=found_user,
+            history=history
+        )
+        return stats, update_history
 
-        return TrackingUpdateHistory(found_user=found_user, history=history)
-
-    def build_tracker(self, track: Tracking) -> TrackingUpdateHistory:
+    def build_tracker(self, track: Tracking) -> Tuple[TrackingStats, TrackingUpdateHistory]:
         if track.application == 'twitter':
             return self.twitter(track=track)
 
@@ -86,9 +88,13 @@ class Worker(threading.Thread):
             track: Tracking = v
 
             if track.active:
-                update[tracking_id] = self.build_tracker(track=track)
-        
+                stats, update_history = self.build_tracker(track=track)
+                # do not merge if no new tweet yet.
+                if stats.count > 0:
+                    update[tracking_id] = update_history
+
         if len(list(update.keys())) > 0:
+            # merging only changed and active trackings
             UserCRUD(doc_id=self.user.id).merge_tracking(
                 tracking=TrackingUpdate(trackings=update)
             )

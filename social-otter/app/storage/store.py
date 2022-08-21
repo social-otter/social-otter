@@ -22,7 +22,9 @@ class DataStorage:
 
     def doc_ref(self, *, doc_id):
         if not self._doc_ref:
-            self._doc_ref = self.db().collection(self.collection_name).document(doc_id)
+            self._doc_ref = self.db()\
+                .collection(self.collection_name)\
+                .document(doc_id)
         return self._doc_ref
 
     def doc_to_dict(self, *, doc_id) -> dict:

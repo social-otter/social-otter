@@ -5,7 +5,7 @@ from config import settings
 
 class GithubAPI:
     def __init__(self) -> None:
-        self.base_url = f"https://api.github.com/repos/{settings.owner}/{settings.repo}"
+        self.base_url = f"https://api.github.com/repos/{settings.owner}/{settings.repo}"  # noqa
         self.headers = {
             'Authorization': f'Bearer {settings.workflow_token}'
         }

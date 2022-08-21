@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 from models.webhook import Webhook
 from models.trigger import Trigger
