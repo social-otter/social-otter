@@ -25,5 +25,5 @@ Every business wants to know what people talk about their business. Social media
 |--------|------|
 |Slack|Usable|
 |Microsoft Teams|Usable|
-|Discord|In Planning|
+|Discord|Usable|
 |Custom Webhook|Usable|
