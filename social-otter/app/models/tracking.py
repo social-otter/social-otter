@@ -9,6 +9,7 @@ from models.tracking_history import TrackingHistory
 
 class Tracking(BaseModel):
     id: str
+    created_at: int
     application: str
     active: bool
     keyword: str
