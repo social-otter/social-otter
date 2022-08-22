@@ -48,7 +48,7 @@ class Teams(BaseTemplate):
                                                 {
                                                     "type": "TextBlock",
                                                     "weight": "Bolder",
-                                                    "text": "displayname",
+                                                    "text": tweet.displayname,
                                                     "wrap": True
                                                 },
                                                 {
