@@ -16,16 +16,68 @@ class Teams(BaseTemplate):
                     "contentType": "application/vnd.microsoft.card.adaptive",
                     "contentUrl": None,
                     "content": {
-                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                        "type": "message",
-                        "version": "1.5",
+                        "type": "AdaptiveCard",
                         "body": [
+                                {
+                                    "type": "TextBlock",
+                                    "size": "Medium",
+                                    "weight": "Bolder",
+                                    "text": f"@{tweet.username}",
+                                    "wrap": True,
+                                    "style": "heading"
+                                },
                             {
-                                "type": "TextBlock",
-                                "text": tweet.content,
-                                "wrap": True
+                                    "type": "ColumnSet",
+                                    "columns": [
+                                        {
+                                            "type": "Column",
+                                            "items": [
+                                                {
+                                                    "type": "Image",
+                                                    "style": "Person",
+                                                    "url": tweet.profileImageUrl,
+                                                    "altText": tweet.displayname,
+                                                    "size": "Small"
+                                                }
+                                            ],
+                                            "width": "auto"
+                                        },
+                                        {
+                                            "type": "Column",
+                                            "items": [
+                                                {
+                                                    "type": "TextBlock",
+                                                    "weight": "Bolder",
+                                                    "text": "displayname",
+                                                    "wrap": True
+                                                },
+                                                {
+                                                    "type": "TextBlock",
+                                                    "spacing": "None",
+                                                    "text": tweet.date,
+                                                    "isSubtle": True,
+                                                    "wrap": True
+                                                }
+                                            ],
+                                            "width": "stretch"
+                                        }
+                                    ]
+                                },
+                            {
+                                    "type": "TextBlock",
+                                    "text": "content",
+                                    "wrap": True
+                                }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Go to tweet",
+                                "url": tweet.url
                             }
-                        ]
+                        ],
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5"
                     }
                 }
             ]
