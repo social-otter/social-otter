@@ -18,51 +18,43 @@ class Teams(BaseTemplate):
                     "content": {
                         "type": "AdaptiveCard",
                         "body": [
-                                {
-                                    "type": "TextBlock",
-                                    "size": "Medium",
-                                    "weight": "Bolder",
-                                    "text": f"@{tweet.username}",
-                                    "wrap": True,
-                                    "style": "heading"
-                                },
                             {
-                                    "type": "ColumnSet",
-                                    "columns": [
-                                        {
-                                            "type": "Column",
-                                            "items": [
-                                                {
-                                                    "type": "Image",
-                                                    "style": "Person",
-                                                    "url": tweet.profileImageUrl,
-                                                    "altText": tweet.displayname,
-                                                    "size": "Small"
-                                                }
-                                            ],
-                                            "width": "auto"
-                                        },
-                                        {
-                                            "type": "Column",
-                                            "items": [
-                                                {
-                                                    "type": "TextBlock",
-                                                    "weight": "Bolder",
-                                                    "text": tweet.displayname,
-                                                    "wrap": True
-                                                },
-                                                {
-                                                    "type": "TextBlock",
-                                                    "spacing": "None",
-                                                    "text": tweet.date,
-                                                    "isSubtle": True,
-                                                    "wrap": True
-                                                }
-                                            ],
-                                            "width": "stretch"
-                                        }
-                                    ]
-                                },
+                                "type": "ColumnSet",
+                                "columns": [
+                                    {
+                                        "type": "Column",
+                                        "items": [
+                                            {
+                                                "type": "Image",
+                                                "style": "Person",
+                                                "url": tweet.profileImageUrl,
+                                                "altText": f"{tweet.displayname} @{tweet.username}",
+                                                "size": "Small"
+                                            }
+                                        ],
+                                        "width": "auto"
+                                    },
+                                    {
+                                        "type": "Column",
+                                        "items": [
+                                            {
+                                                "type": "TextBlock",
+                                                "weight": "Bolder",
+                                                "text": tweet.displayname,
+                                                "wrap": True
+                                            },
+                                            {
+                                                "type": "TextBlock",
+                                                "spacing": "None",
+                                                "text": tweet.date,
+                                                "isSubtle": True,
+                                                "wrap": True
+                                            }
+                                        ],
+                                        "width": "stretch"
+                                    }
+                                ]
+                            },
                             {
                                 "type": "TextBlock",
                                 "text": tweet.content,
