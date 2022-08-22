@@ -9,7 +9,7 @@ def get_all_users(workflow_name, doc_id=None) -> List[User]:
     collection = storage.db().collection('users')
 
     if doc_id:
-        x = collection.document(doc_id)
+        x = collection.document(doc_id).get()
         return [User(**{"id": x.id, **x.to_dict()})]
 
     results = collection.where('workflow_name', '==', workflow_name).stream()
