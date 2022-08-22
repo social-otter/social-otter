@@ -64,10 +64,10 @@ class Teams(BaseTemplate):
                                     ]
                                 },
                             {
-                                    "type": "TextBlock",
-                                    "text": "content",
-                                    "wrap": True
-                                }
+                                "type": "TextBlock",
+                                "text": tweet.content,
+                                "wrap": True
+                            }
                         ],
                         "actions": [
                             {
