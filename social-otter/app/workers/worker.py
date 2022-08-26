@@ -1,6 +1,7 @@
 import threading
-from time import time
-from typing import Tuple
+from time import time, mktime
+from datetime import datetime
+from typing import List, Tuple
 from storage.user import UserCRUD
 from integrations.twitter import Twitter
 from models.user import User
@@ -29,13 +30,20 @@ class Worker(threading.Thread):
         tw = Twitter(tracking=track)
         stats, tweets = tw.grab_new_tweets()
         last_tweet_id = sorted(tweets, key=lambda x: x.id)[-1].id if len(tweets) > 0 else 0
-        all_stats = []
+        all_stats: List[TrackingStats] = []
 
         if track.history:
             if track.history.stats:
                 all_stats = track.history.stats
 
         all_stats.append(stats)
+
+        # Filtered Daily Tweets
+        if len(all_stats) > 0:
+            today = datetime.now().date()
+            today_timestamp = int(mktime(today.timetuple()))
+            filtered_stats = [x for x in all_stats if x.timestamp >= today_timestamp]
+            all_stats = list(sorted(filtered_stats, key=lambda x: x.timestamp))
 
         # Notify to channels
         for tweet in sorted(tweets, key=lambda x: x.id):
