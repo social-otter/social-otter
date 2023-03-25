@@ -5,7 +5,7 @@ from models.tracking import Tracking
 
 class User(BaseModel):
     id: str
-    full_name: str
+    full_name: Optional[str]
     created_at: float
     trackings: Dict[str, Tracking]
     workflow_name: Optional[str]
