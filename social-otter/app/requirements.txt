@@ -6,3 +6,10 @@ sentry-sdk
 pydantic
 python-dotenv
 flake8
+# ML Dependencies
+transformers
+numpy
+scipy
+torch
+# Utils
+rich

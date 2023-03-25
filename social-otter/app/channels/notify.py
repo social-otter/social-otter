@@ -14,17 +14,14 @@ class Notify:
         self.model = model
 
     def template(self) -> Any:
-        if self.webhook.app == 'slack':
-            return Slack(model=self.model).build_template()
+        templates = {
+            "slack": Slack(model=self.model).build_template(),
+            "teams": Teams(model=self.model).build_template(),
+            "discord": Discord(model=self.model).build_template(),
+            "webhook": self.model.dict()
+        }
 
-        if self.webhook.app == 'teams':
-            return Teams(model=self.model).build_template()
-
-        if self.webhook.app == 'discord':
-            return Discord(model=self.model).build_template()
-
-        if self.webhook.app == 'webhook':
-            return self.model.dict()
+        return templates.get(self.webhook.app)
 
     def send(self) -> Response:
         return requests.post(url=self.webhook.url, json=self.template())

@@ -1,14 +1,11 @@
-from pydantic import BaseModel
-from models.social import Tweet
 from channels.template import BaseTemplate
 
 
 class Teams(BaseTemplate):
-    def __init__(self, model: BaseModel) -> None:
+    def __init__(self, model) -> None:
         super().__init__(model)
 
     def prep_tweet(self) -> dict:
-        tweet: Tweet = self.model
         return {
             "type": "message",
             "attachments": [
@@ -27,8 +24,8 @@ class Teams(BaseTemplate):
                                             {
                                                 "type": "Image",
                                                 "style": "Person",
-                                                "url": tweet.profileImageUrl,
-                                                "altText": f"{tweet.displayname} @{tweet.username}",
+                                                "url": self.model.profileImageUrl,  # noqa
+                                                "altText": f"{self.model.displayname} @{self.model.username}",  # noqa
                                                 "size": "Small"
                                             }
                                         ],
@@ -40,13 +37,13 @@ class Teams(BaseTemplate):
                                             {
                                                 "type": "TextBlock",
                                                 "weight": "Bolder",
-                                                "text": tweet.displayname,
+                                                "text": self.model.displayname,
                                                 "wrap": True
                                             },
                                             {
                                                 "type": "TextBlock",
                                                 "spacing": "None",
-                                                "text": tweet.date,
+                                                "text": self.model.date,
                                                 "isSubtle": True,
                                                 "wrap": True
                                             }
@@ -57,7 +54,7 @@ class Teams(BaseTemplate):
                             },
                             {
                                 "type": "TextBlock",
-                                "text": tweet.content,
+                                "text": self.model.content,
                                 "wrap": True
                             }
                         ],
@@ -65,7 +62,7 @@ class Teams(BaseTemplate):
                             {
                                 "type": "Action.OpenUrl",
                                 "title": "Go to tweet",
-                                "url": tweet.url
+                                "url": self.model.url
                             }
                         ],
                         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
