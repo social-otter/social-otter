@@ -1,14 +1,11 @@
-from pydantic import BaseModel
-from models.social import Tweet
 from channels.template import BaseTemplate
 
 
 class Discord(BaseTemplate):
-    def __init__(self, model: BaseModel) -> None:
+    def __init__(self, model) -> None:
         super().__init__(model)
 
     def prep_tweet(self) -> dict:
-        tweet: Tweet = self.model
         avatar_url = "https://raw.githubusercontent.com/social-otter/social-otter/main/social-otter/static/images/otter.png"  # noqa
         return {
             "username": "Social Otter",
@@ -17,15 +14,15 @@ class Discord(BaseTemplate):
                 {
                     "color": 1942002,  # twitter's color
                     "author": {
-                        "name": f'{tweet.displayname} @{tweet.username}',
-                        "url": tweet.url,
-                        "icon_url": tweet.profileImageUrl
+                        "name": f'{self.model.displayname} @{self.model.username}',  # noqa
+                        "url": self.model.url,
+                        "icon_url": self.model.profileImageUrl
                     },
-                    "title": 'Go to tweet',
-                    "url": tweet.url,
-                    "description": tweet.content,
+                    "title": 'Go to self.model',
+                    "url": self.model.url,
+                    "description": self.model.content,
                     "footer": {
-                        "text": tweet.date
+                        "text": self.model.date
                     }
                 }
             ]
